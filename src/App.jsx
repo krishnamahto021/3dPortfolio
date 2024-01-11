@@ -6,7 +6,7 @@ import Projects from "./Pages/Projects";
 import Contact from "./Pages/Contact";
 function App() {
   return (
-    <main className="bg-slate-300/20 h-screen mt-">
+    <main className="bg-slate-300/20 min-h-screen h-fit">
       <Router>
         <Navbar />
         <Routes>

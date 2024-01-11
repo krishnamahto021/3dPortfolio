@@ -1,18 +1,27 @@
-import React, { useRef, useState } from "react";
+import React, { Suspense, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+import Fox from "../Models/Fox";
+import { Canvas } from "@react-three/fiber";
+import Loader from "../Components/Loader";
 
 const Contact = () => {
   const formRef = useRef(null);
+  const [currentAnimation, setCurrentAnimation] = useState("idle");
 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const handleFocus = () => {};
-  const handleBlur = () => {};
+  const handleFocus = () => {
+    setCurrentAnimation("walk");
+  };
+  const handleBlur = () => {
+    setCurrentAnimation("idle");
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setCurrentAnimation("hit");
     try {
       setLoading(true);
       const res = await emailjs.send(
@@ -29,19 +38,21 @@ const Contact = () => {
       );
       setLoading(false);
       setForm({ name: "", email: "", message: "" });
+      setCurrentAnimation("idle");
     } catch (error) {
-      console.log(`Error in sending mail ${error}`);
+      setLoading(false);
+      setCurrentAnimation("idle");
     }
   };
 
   return (
-    <section className="formContainer relative top-14 p-2 flex justify-around items-center flex-col ">
-      <div className="font-bold text-lg ">Get in Touch 👋</div>
+    <section className="formContainer relative top-14 p-2 flex justify-around items-center flex-col md:flex-row ">
       <form
         ref={formRef}
-        className="contactForm flex-col flex gap-4 w-1/2 mt-4 shadow-2xl rounded-md p-3 bg-gradient-to-r from-cyan-500 to-blue-500 "
+        className="contactForm flex-col flex gap-4 w-full md:w-1/2 mt-4 shadow-2xl rounded-md p-3 bg-gradient-to-r from-cyan-500 to-blue-500 "
         onSubmit={handleSubmit}
       >
+        <div className="font-bold text-lg text-center ">Get in Touch 👋</div>
         <div className="flex flex-col ">
           <label className="font-semibold">Name</label>
           <input
@@ -94,6 +105,35 @@ const Contact = () => {
           </button>
         </div>
       </form>
+      <div className="md:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]">
+        <Canvas
+          camera={{
+            position: [0, 0, 5],
+            fov: 75,
+            near: 0.5,
+            far: 1000,
+          }}
+        >
+          <directionalLight position={[0, 0, 1]} intensity={2.5} />
+          <ambientLight intensity={1} />
+          <pointLight position={[5, 10, 0]} intensity={2} />
+          <spotLight
+            position={[10, 10, 10]}
+            angle={0.15}
+            penumbra={1}
+            intensity={2}
+          />
+
+          <Suspense fallback={<Loader />}>
+            <Fox
+              currentAnimation={currentAnimation}
+              position={[0.5, 0.35, 0]}
+              rotation={[12.629, -0.6, 0]}
+              scale={[0.5, 0.5, 0.5]}
+            />
+          </Suspense>
+        </Canvas>
+      </div>
     </section>
   );
 };
