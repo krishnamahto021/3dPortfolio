@@ -3,6 +3,7 @@ import emailjs from "@emailjs/browser";
 import Fox from "../Models/Fox";
 import { Canvas } from "@react-three/fiber";
 import Loader from "../Components/Loader";
+import { toast } from "react-toastify";
 
 const Contact = () => {
   const formRef = useRef(null);
@@ -39,9 +40,11 @@ const Contact = () => {
       setLoading(false);
       setForm({ name: "", email: "", message: "" });
       setCurrentAnimation("idle");
+      toast.success(`Recieved your message 🥳 `);
     } catch (error) {
       setLoading(false);
       setCurrentAnimation("idle");
+      toast.error("Couldnot receive your message 😢 ");
     }
   };
 
