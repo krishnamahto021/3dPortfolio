@@ -14,8 +14,10 @@ const Home = () => {
     let screenScale = null;
     let screenPositon = [0, -6.5, -43];
     let rotation = [0.1, 4.7, 0];
-    if (window.innerWidth < 768) {
-      screenScale = [0.9, 0.9, 0.9];
+    if (window.innerWidth < 320) {
+      screenScale = [0.4, 0.4, 0.4];
+    } else if (window.innerWidth > 320 && window.innerWidth < 767) {
+      screenScale = [0.5, 0.5, 0.5];
     } else {
       screenScale = [1, 1, 1];
     }
@@ -39,7 +41,7 @@ const Home = () => {
   const [planeScale, planePosition] = adjustPlaneForScreenSize();
   return (
     <section className="w-full h-screen relative">
-      <div className="absolute top-9 left-0 right-0 z-10 flex items-center justify-center ">
+      <div className="absolute top-9 left-0 right-0 z-10 flex items-center justify-center p-2 mt-2">
         {currentStage && <HomeInfo currentStage={currentStage} />}
       </div>
       <Canvas
@@ -63,8 +65,8 @@ const Home = () => {
             setCurrentStage={setCurrentStage}
           />
           <Plane
-            planePosition={planePosition}
-            planeScale={planeScale}
+            position={planePosition}
+            scale={planeScale}
             isRotating={isRotating}
             rotation={[0, 20, 0]}
           />

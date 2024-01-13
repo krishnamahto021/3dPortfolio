@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 function App() {
   return (
-    <main className="bg-slate-300/20 min-h-screen h-fit">
+    <main className="bg-slate-300/20 h-[100vh]">
       <Router>
         <Navbar />
         <ToastContainer />
