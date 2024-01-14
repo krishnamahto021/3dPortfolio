@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import islandScene from "../assets/3d/island.glb";
 import { a } from "@react-spring/three";
+import islandScene from "../assets/3d/island.glb";
+
 const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
   const { nodes, materials } = useGLTF(islandScene);
   const islandRef = useRef();
@@ -37,25 +38,9 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "ArrowLeft") {
-      if (!isRotating) setIsRotating(true);
-
-      islandRef.current.rotation.y += 0.01 * Math.PI;
-      rotationSpeed.current = 0.0125;
-    } else if (e.key === "ArrowRight") {
-      if (!isRotating) setIsRotating(true);
-
-      islandRef.current.rotation.y -= 0.01 * Math.PI;
-      rotationSpeed.current = -0.0125;
-    }
-  };
-
-  const handleKeyUp = (e) => {
-    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-      setIsRotating(false);
-    }
-  };
+  const handleTouchStart = (e) => handlePointerDown(e);
+  const handleTouchEnd = (e) => handlePointerUp(e);
+  const handleTouchMove = (e) => handlePointerMove(e);
 
   useFrame(() => {
     if (!isRotating) {
@@ -92,18 +77,36 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
 
   useEffect(() => {
     const canvas = gl.domElement;
+
     document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("pointerup", handlePointerUp);
     document.addEventListener("pointermove", handlePointerMove);
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
+
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    document.addEventListener("touchend", handleTouchEnd, { passive: false });
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
 
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("pointerup", handlePointerUp);
       document.removeEventListener("pointermove", handlePointerMove);
+
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [gl, handlePointerDown, handlePointerUp, handlePointerMove]);
+  }, [
+    gl,
+    handlePointerDown,
+    handlePointerUp,
+    handlePointerMove,
+    handleTouchStart,
+    handleTouchEnd,
+    handleTouchMove,
+  ]);
+
   return (
     <a.group {...props} ref={islandRef}>
       <mesh
@@ -137,4 +140,5 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
     </a.group>
   );
 };
+
 export default Island;
