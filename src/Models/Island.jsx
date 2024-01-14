@@ -3,11 +3,12 @@ import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 import islandScene from "../assets/3d/island.glb";
+import { Link } from "react-router-dom";
 
 const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
   const { nodes, materials } = useGLTF(islandScene);
   const islandRef = useRef();
-  const { gl, viewport } = useThree();
+  const { viewport } = useThree();
   const lastX = useRef(0);
   const rotationSpeed = useRef(0);
   const dampingFactor = 0.95;
@@ -38,9 +39,25 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
     }
   };
 
-  const handleTouchStart = (e) => handlePointerDown(e);
-  const handleTouchEnd = (e) => handlePointerUp(e);
-  const handleTouchMove = (e) => handlePointerMove(e);
+  const handleTouchStart = (e) => {
+    setIsRotating(true);
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    lastX.current = clientX;
+  };
+
+  const handleTouchEnd = () => {
+    setIsRotating(false);
+  };
+
+  const handleTouchMove = (e) => {
+    if (isRotating) {
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const delta = (clientX - lastX.current) / viewport.width;
+      islandRef.current.rotation.y += delta * 0.01 * Math.PI;
+      lastX.current = clientX;
+      rotationSpeed.current = delta * 0.01 * Math.PI;
+    }
+  };
 
   useFrame(() => {
     if (!isRotating) {
@@ -76,35 +93,37 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
   });
 
   useEffect(() => {
-    const canvas = gl.domElement;
+    const handleTouchCancel = () => {
+      setIsRotating(false);
+    };
 
     document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("pointerup", handlePointerUp);
     document.addEventListener("pointermove", handlePointerMove);
-
     document.addEventListener("touchstart", handleTouchStart, {
       passive: false,
     });
-    document.addEventListener("touchend", handleTouchEnd, { passive: false });
+    document.addEventListener("touchend", handleTouchEnd);
     document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    document.addEventListener("touchcancel", handleTouchCancel);
 
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("pointerup", handlePointerUp);
       document.removeEventListener("pointermove", handlePointerMove);
-
       document.removeEventListener("touchstart", handleTouchStart);
       document.removeEventListener("touchend", handleTouchEnd);
       document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchcancel", handleTouchCancel);
     };
   }, [
-    gl,
     handlePointerDown,
     handlePointerUp,
     handlePointerMove,
     handleTouchStart,
     handleTouchEnd,
     handleTouchMove,
+    isRotating,
   ]);
 
   return (

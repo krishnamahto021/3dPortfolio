@@ -11,21 +11,17 @@ const Navbar = () => {
         >
           Kr
         </NavLink>
-        <div className="flex  gap-4">
+        <div className="flex  gap-4 text-textFour">
           <NavLink
             exact
-            className={({ isActive }) =>
-              isActive ? "text-blue-600" : "text-black"
-            }
+            className="w-15 h-10 rounded-lg flex items-center justify-center font-medium p-2 shadow-md  "
             to="/about"
           >
             about
           </NavLink>
           <NavLink
             exact
-            className={({ isActive }) =>
-              isActive ? "text-blue-600" : "text-black"
-            }
+            className="w-15 h-10 rounded-lg  flex items-center justify-center font-medium p-2 shadow-md  "
             to="/projects"
           >
             Projects
