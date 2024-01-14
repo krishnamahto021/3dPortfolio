@@ -120,7 +120,9 @@ const Portfolio = () => {
           <p className="text-4xl font-bold inline border-b-4 border-gray-500">
             Projects
           </p>
-          <p className="py-6">Check out Some of my Work right here</p>
+          <p className="text-2xl font-normal mt-6 leading-10 md:text-3xl lg:text-4xl ">
+            Check out Some of my Work right here
+          </p>
         </div>
         <div className="projectsContainer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-4 sm:px-0 ">
           {portfolioItems.map((p, index) => (

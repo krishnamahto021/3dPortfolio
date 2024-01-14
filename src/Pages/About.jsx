@@ -9,7 +9,7 @@ const About = () => {
         <h1 className="font-semibold text-4xl sm:text-6xl md:text-7xl lg:text-8xl">
           Hello, I'm <span className="text-textOne">Krishna</span>
         </h1>
-        <div className="text-2xl font-normal mt-4 md:text-3xl lg:text-4xl ">
+        <div className="text-2xl font-normal mt-8 leading-10 md:text-3xl lg:text-4xl ">
           Despite my relatively fresh journey in the tech world, I bring a
           unique blend of enthusiasm, adaptability, and a knack for
           problem-solving. My coding journey began with a curiosity that quickly

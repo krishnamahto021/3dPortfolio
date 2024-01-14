@@ -38,8 +38,8 @@ const renderContent = {
       text={
         "Made various projects across the domains with a variety of tech Stack used"
       }
-      link={"/portfolio"}
-      btnText={"Visit my portfolio"}
+      link={"/projects"}
+      btnText={"View Projects"}
     />
   ),
 };
